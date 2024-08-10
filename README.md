@@ -8,6 +8,8 @@ Unfortunately i am not able to invest more time into maintaining this project.
 
 Feel free to fork it and create a PR that adds a link to your fork in the README file.
 
+[Link to max5800 fork](https://github.com/max5800/firefly-iii-ai-categorize)
+
 ## How it works
 
 It provides a webhook that you can set up to be called every time a new expense is added.
