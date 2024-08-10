@@ -1,18 +1,18 @@
-import { Configuration, OpenAIApi } from "openai";
-import { getConfigVariable } from "./util.js";
+import {Configuration, OpenAIApi} from "openai";
+import {getConfigVariable} from "./util.js";
 
 export default class OpenAiService {
     #openAi;
-    #model = getConfigVariable("OPENAI_MODEL");
+    #model = getConfigVariable("OPENAI_MODEL");;
 
     constructor() {
-        const apiKey = getConfigVariable("OPENAI_API_KEY");
+        const apiKey = getConfigVariable("OPENAI_API_KEY")
 
         const configuration = new Configuration({
             apiKey
         });
 
-        this.#openAi = new OpenAIApi(configuration);
+        this.#openAi = new OpenAIApi(configuration)
     }
 
     async classify(categories, destinationName, description) {
@@ -24,20 +24,20 @@ export default class OpenAiService {
                 messages: [{ role: "user", content: prompt }]
             });
 
-            let guess = response.data.choices[0].message.content;
+            let guess = response.data.choices[0].text;
             guess = guess.replace("\n", "");
             guess = guess.trim();
 
             if (categories.indexOf(guess) === -1) {
                 console.warn(`OpenAI could not classify the transaction. 
                 Prompt: ${prompt}
-                OpenAIs guess: ${guess}`);
+                OpenAIs guess: ${guess}`)
                 return null;
             }
 
             return {
                 prompt,
-                response: response.data.choices[0].message.content,
+                response: response.data.choices[0].text,
                 category: guess
             };
 
@@ -45,7 +45,7 @@ export default class OpenAiService {
             if (error.response) {
                 console.error(error.response.status);
                 console.error(error.response.data);
-                throw new OpenAiException(error.response.status, error.response, error.response.data);
+                throw new OpenAiException(error.status, error.response, error.response.data);
             } else {
                 console.error(error.message);
                 throw new OpenAiException(null, null, error.message);
@@ -54,7 +54,7 @@ export default class OpenAiService {
     }
 
     #generatePrompt(categories, destinationName, description) {
-        return `Given I want to categorize transactions on my bank account into these categories: ${categories.join(", ")}
+        return `Given i want to categorize transactions on my bank account into this categories: ${categories.join(", ")}
 In which category would a transaction from "${destinationName}" with the subject "${description}" fall into?
 Just output the name of the category. Does not have to be a complete sentence.`;
     }
